@@ -48,9 +48,6 @@ public class User implements UserDetails {
     @Column(name = "ROLE", nullable = false, length = 50)
     private String role;
 
-    @Column(name = "RESET_PASSWORD_TOKEN")
-    private String resetPasswordToken;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(getRole()));
