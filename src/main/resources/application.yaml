@@ -4,14 +4,14 @@ server:
 spring:
   application:
     name: TaskManagementSystem
-#  datasource:
-#    url:
-#    username:
-#    password:
-#    driver-class-name:
-#  jpa:
-#    hibernate:
-#      dll-auto: create
-#    properties:
-#      hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: ${DB_DRIVER_CLASS_NAME}
+  jpa:
+    hibernate:
+      dll-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
