@@ -1,0 +1,17 @@
+server:
+  port: 8089
+
+spring:
+  application:
+    name: TaskManagementSystem
+#  datasource:
+#    url:
+#    username:
+#    password:
+#    driver-class-name:
+#  jpa:
+#    hibernate:
+#      dll-auto: create
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
