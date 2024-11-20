@@ -18,7 +18,7 @@ public class Comment {
     @Column(name = "ID", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "CONTENT", columnDefinition = "CHARACTER LARGE OBJECT(0, 0) not null")
+    @Column(name = "CONTENT", nullable = false)
     @Lob
     private String content;
     @OneToOne
