@@ -24,8 +24,7 @@ public class Task {
     @NotNull
     @Column(name = "TITLE", nullable = false, length = 50)
     private String title;
-    @Column(name = "DESCRIPTION", nullable = false)
-    @Lob
+    @Column(name = "DESCRIPTION", columnDefinition = "TEXT", nullable = false)
     private String description;
     @NotNull
     @Column(name = "STATUS", nullable = false)

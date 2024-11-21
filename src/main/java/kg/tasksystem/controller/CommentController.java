@@ -8,4 +8,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("comments")
 @RequiredArgsConstructor
 public class CommentController {
+    //Добавить комментарий (АДМИН И ИСПОЛНИТЕЛЬ)
 }

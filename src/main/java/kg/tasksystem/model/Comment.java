@@ -19,7 +19,6 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "CONTENT", nullable = false)
-    @Lob
     private String content;
     @OneToOne
     @JoinColumn(name = "AUTHORID", nullable = false)

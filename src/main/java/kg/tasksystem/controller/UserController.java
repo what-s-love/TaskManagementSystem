@@ -4,6 +4,7 @@ import kg.tasksystem.model.User;
 import kg.tasksystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
+    //ToDo Перевести ошибку доступа на Handler
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody List<User> getAll() {
         return userService.getAll();
