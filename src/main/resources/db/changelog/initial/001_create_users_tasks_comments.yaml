@@ -1,0 +1,171 @@
+databaseChangeLog:
+  - changeSet:
+      id: Create table Users
+      author: VladislavK
+      preConditions:
+        - onFail: MARK_RAN
+        - onError: HALT
+          not:
+            tableExists:
+              tableName: USERS
+      changes:
+        - createTable:
+            tableName: USERS
+            columns:
+              - column:
+                  name: ID
+                  type: INTEGER
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: NAME
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: SURNAME
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: EMAIL
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: PASSWORD
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ROLE
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: Create table Tasks
+      author: VladislavK
+      preConditions:
+        - onFail: MARK_RAN
+        - onError: HALT
+          not:
+            tableExists:
+              tableName: TASKS
+      changes:
+        - createTable:
+            tableName: TASKS
+            columns:
+              - column:
+                  name: ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: TITLE
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: STATUS
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PRIORITY
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATETIME
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATETIME
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: AUTHORID
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PERFORMERID
+                  type: INTEGER
+
+        - addForeignKeyConstraint:
+            baseTableName: TASKS
+            baseColumnNames: AUTHORID
+            referencedTableName: USERS
+            referencedColumnNames: ID
+            constraintName: FK_TASK_AUTHOR_ID
+
+        - addForeignKeyConstraint:
+            baseTableName: TASKS
+            baseColumnNames: PERFORMERID
+            referencedTableName: USERS
+            referencedColumnNames: ID
+            constraintName: FK_TASK_PERFORMER_ID
+
+  - changeSet:
+      id: Create table Comments
+      author: VladislavK
+      preConditions:
+        - onFail: MARK_RAN
+        - onError: HALT
+          not:
+            tableExists:
+              tableName: COMMENTS
+      changes:
+        - createTable:
+            tableName: COMMENTS
+            columns:
+              - column:
+                  name: ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: CONTENT
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: AUTHORID
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: TASKID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: COMMENTS
+            baseColumnNames: AUTHORID
+            referencedTableName: USERS
+            referencedColumnNames: ID
+            constraintName: FK_COMMENT_AUTHOR_ID
+
+        - addForeignKeyConstraint:
+            baseTableName: COMMENTS
+            baseColumnNames: TASKID
+            referencedTableName: TASKS
+            referencedColumnNames: ID
+            constraintName: FK_COMMENT_TASK_ID
+            onDelete: CASCADE

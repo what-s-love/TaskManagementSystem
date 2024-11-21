@@ -36,7 +36,7 @@ public class User implements UserDetails {
 
     @Size(max = 50)
     @NotNull
-    @Column(name = "EMAIL", nullable = false, length = 50)
+    @Column(name = "EMAIL", nullable = false, length = 50, unique = true)
     private String email;
 
     @Size(max = 255)
