@@ -19,3 +19,10 @@ spring:
     show-sql: true
   liquibase:
     change-log: classpath:/db/changelog/master.yaml
+
+jwt:
+  expiration: ${JWT_EXPIRATION_TIME}
+  secret: ${JWT_SECRET_KEY}
+logging:
+  level:
+    org.springframework.security: debug

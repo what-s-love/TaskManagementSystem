@@ -4,10 +4,7 @@ import kg.tasksystem.model.User;
 import kg.tasksystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,4 +18,15 @@ public class UserController {
     public @ResponseBody List<User> getAll() {
         return userService.getAll();
     }
+
+    //ToDo
+/*
+    @GetMapping
+    public ResponseEntity<Page<User>> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(userService.getAll(pageable));
+    }
+*/
 }
