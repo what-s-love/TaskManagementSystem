@@ -17,6 +17,7 @@ public class TaskController {
     private final TaskService taskService;
 
     //Все задачи + фильтрация (автор и/или исполнитель) + пагинация (ВСЕ)
+    //ToDo Не доставать к комменту задачу, к которой он привязан, иначе это рекурсия
     @GetMapping
     public @ResponseBody List<Task> getAll() {
         return taskService.getAll();
