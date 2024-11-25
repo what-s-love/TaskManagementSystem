@@ -7,6 +7,7 @@ import kg.tasksystem.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,8 +18,15 @@ public class CommentController {
     @PostMapping
     @Operation(summary = "Добавление комментария к задаче", description = "Доступно только администратору и исполнителю")
     public HttpStatus createComment(@RequestBody @Valid CommentDto comment,
+                                    BindingResult result,
                                     Authentication auth) {
-        commentService.create(comment, auth);
+        //ToDo Разобраться с валидацией
+        // может BindingResult не на своём месте
+        if (result.hasErrors()) {
+            return HttpStatus.BAD_REQUEST;
+        } else {
+            commentService.create(comment, auth);
+        }
         return HttpStatus.OK;
     }
 }
