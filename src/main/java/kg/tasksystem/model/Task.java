@@ -1,5 +1,6 @@
 package kg.tasksystem.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -39,6 +40,7 @@ public class Task {
     @Column(name = "UPDATETIME", nullable = false)
     private LocalDateTime updatedAt;
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Comment> comments;
     @OneToOne
     @JoinColumn(name = "AUTHORID", nullable = false)

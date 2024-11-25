@@ -1,19 +1,22 @@
 package kg.tasksystem.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import kg.tasksystem.dto.TaskDto;
 import kg.tasksystem.model.Task;
-import kg.tasksystem.model.User;
 import kg.tasksystem.service.Paginator;
 import kg.tasksystem.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -22,12 +25,12 @@ import java.util.List;
 public class TaskController {
     private final TaskService taskService;
 
-    //ToDo Не доставать к комменту задачу, к которой он привязан, иначе это рекурсия
     @GetMapping
-    public @ResponseBody List<Task> getTasks(@RequestParam(name = "authorId", required = false) Integer authorId,
+    @Operation(summary = "Получение всех задач", description = "Доступны фильтры по ID автора/исполнителя задачи, пагинация")
+    public @ResponseBody ResponseEntity<List<Task>> getTasks(@RequestParam(name = "authorId", required = false) Integer authorId,
                                            @RequestParam(name = "performerId", required = false) Integer performerId,
                                            @RequestParam(defaultValue = "0") int page,
-                                           @RequestParam(defaultValue = "10") int size) {
+                                           @RequestParam(defaultValue = "3") int size) {
         List<Task> allTasks = taskService.getAll();
         if (authorId != null) {
             allTasks = allTasks.stream().filter(e -> e.getAuthor().getId().equals(authorId)).toList();
@@ -36,36 +39,35 @@ public class TaskController {
             allTasks = allTasks.stream().filter(e -> e.getPerformer().getId().equals(authorId)).toList();
         }
         Page<Task> taskPage = new Paginator<Task>().toPage(allTasks, PageRequest.of(page, size));
-        return taskPage.getContent();
+        return ResponseEntity.ok(taskPage.getContent());
     }
 
-    //ToDo Задача по id (АДМИН И ИСПОЛНИТЕЛЬ)
-    @GetMapping({"id"})
-    public @ResponseBody Task getTask(@PathVariable Long id) {
-        return taskService.getTask(id);
+    @GetMapping("{id}")
+    @Operation(summary = "Получение задачи по ID", description = "Доступно только администратору и исполнителю задачи")
+    public @ResponseBody ResponseEntity<Task> getTask(@PathVariable Long id, Authentication auth) {
+        return ResponseEntity.ok(taskService.getTask(id, auth));
     }
 
-    //ToDo Создание задачи + валидация + возврат ошибок (АДМИН)
-    @PostMapping("create")
+    @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public HttpStatus create(@RequestBody @Valid TaskDto taskDto,
+    @Operation(summary = "Создание новой задачи", description = "Доступно только администратору")
+    public ResponseEntity<Task> create(@RequestBody @Valid TaskDto taskDto,
                              Authentication auth) {
-        taskService.create(taskDto, auth);
-        return HttpStatus.OK;
+        return ResponseEntity.ok(taskService.create(taskDto, auth));
     }
 
     //ToDo Редактирование задачи + валидация + возврат ошибок (АДМИН)
     @PostMapping("{id}/edit")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public HttpStatus edit(@PathVariable Long id,
+    @Operation(summary = "Редактирование задачи", description = "Доступно только администратору")
+    public ResponseEntity<Task> edit(@PathVariable Long id,
                            @RequestBody @Valid TaskDto taskDto) {
-        taskService.edit(id, taskDto);
-        return HttpStatus.OK;
+        return ResponseEntity.ok(taskService.edit(id, taskDto));
     }
 
-    //ToDO Удаление задачи (АДМИН)
     @DeleteMapping("{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @Operation(summary = "Удаление задачи", description = "Доступно только администратору")
     public HttpStatus delete(@PathVariable Long id) {
         taskService.delete(id);
         return HttpStatus.OK;
@@ -73,17 +75,17 @@ public class TaskController {
 
     //ToDo Изменить статус (АДМИН И ИСПОЛНИТЕЛЬ)
     @GetMapping("{id}/change-status")
-    public HttpStatus changeStatus(@PathVariable Long id,
-                                   Authentication auth) {
-        taskService.changeStatus(id, auth);
-        return HttpStatus.OK;
+    @Operation(summary = "Изменение статуса задачи", description = "Доступно только администратору и исполнителю")
+    public ResponseEntity<Task> changeStatus(@PathVariable Long id,
+                                       Authentication auth) throws IOException {
+            return ResponseEntity.ok(taskService.changeStatus(id, auth));
     }
 
     @GetMapping("{id}/set-performer")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public HttpStatus setPerformer(@PathVariable Long id,
+    @Operation(summary = "Назначение исполнителя задачи", description = "Доступно только администратору")
+    public ResponseEntity<Task> setPerformer(@PathVariable Long id,
                                    @RequestParam int userId) {
-        taskService.setPerformer(id, userId);
-        return HttpStatus.OK;
+        return ResponseEntity.ok(taskService.setPerformer(id, userId));
     }
 }

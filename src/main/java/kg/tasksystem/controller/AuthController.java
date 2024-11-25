@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final AuthenticationService authenticationService;
 
-    @Operation(summary = "Authorization")
+    @Operation(summary = "Авторизация")
     @PostMapping(path = "/sign-in", produces = MediaType.APPLICATION_JSON_VALUE)
     public JwtAuthenticationResponse signIn(@RequestBody @Valid SignInRequest request) {
         return authenticationService.signIn(request);

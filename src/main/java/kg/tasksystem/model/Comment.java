@@ -1,5 +1,7 @@
 package kg.tasksystem.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -24,8 +26,10 @@ public class Comment {
     @JoinColumn(name = "AUTHORID", nullable = false)
     private User author;
     @NotNull
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "TASKID", nullable = false)
+    @JsonBackReference
     private Task task;
 }

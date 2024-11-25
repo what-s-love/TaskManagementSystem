@@ -1,5 +1,6 @@
 package kg.tasksystem.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import kg.tasksystem.model.User;
 import kg.tasksystem.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,20 +19,16 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Получение всех пользователей", description = "Доступно только администратору")
     public @ResponseBody List<User> getUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "2") int size) {
         return userService.getUsersOfPage(page, size);
     }
 
-/*
-    @GetMapping({"id"})
+    @GetMapping("{id}")
+    @Operation(summary = "Получение данных пользователя по ID", description = "Доступно только администратору")
     public @ResponseBody ResponseEntity<User> getUser(@PathVariable int id) {
         return ResponseEntity.ok(userService.getById(id));
-    }
-*/
-    @GetMapping({"id"})
-    public @ResponseBody User getUser(@PathVariable int id) {
-        return userService.getById(id);
     }
 }
