@@ -22,7 +22,7 @@ public class CommentService {
     private final UserService userService;
     private final TaskService taskService;
 
-    public void create(CommentDto dto, Authentication auth) {
+    public Comment create(CommentDto dto, Authentication auth) {
         User author = userService.getByEmail(auth.getName());
         Task task = taskService.getTask(dto.getTaskId(), auth);
         if (author.getRole().equals(Role.ROLE_ADMIN.toString()) || Objects.equals(author.getId(), task.getPerformer().getId())) {
@@ -31,7 +31,7 @@ public class CommentService {
                     .task(task)
                     .author(author)
                     .build();
-            commentRepository.save(newComment);
+            return commentRepository.save(newComment);
         } else {
             throw new AccessDeniedException("You are not performer of this task");
         }

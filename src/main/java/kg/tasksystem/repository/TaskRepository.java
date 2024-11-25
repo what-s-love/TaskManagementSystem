@@ -16,15 +16,15 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Transactional
     @Modifying
     @Query("update Task t set t.performer = ?1, t.status = ?2 where t.id = ?3")
-    Task updatePerformerAndStatusById(User performer, String status, Long id);
+    void updatePerformerAndStatusById(User performer, String status, Long id);
     @Transactional
     @Modifying
     @Query("update Task t set t.status = ?1 where t.id = ?2")
-    Task updateStatusById(String status, Long id);
+    void updateStatusById(String status, Long id);
     @Transactional
     @Modifying
     @Query("update Task t set t.title = ?1, t.description = ?2, t.priority = ?3, t.updatedAt = ?4 where t.id = ?5")
-    Task updateTaskInfo(String title, String description, String priority, LocalDateTime updateAt, Long id);
+    void updateTaskInfo(String title, String description, String priority, LocalDateTime updateAt, Long id);
     @Override
     Optional<Task> findById(Long aLong);
 }

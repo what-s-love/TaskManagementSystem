@@ -60,9 +60,10 @@ public class TaskController {
     @PostMapping("{id}/edit")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @Operation(summary = "Редактирование задачи", description = "Доступно только администратору")
-    public ResponseEntity<Task> edit(@PathVariable Long id,
+    public HttpStatus edit(@PathVariable Long id,
                            @RequestBody @Valid TaskDto taskDto) {
-        return ResponseEntity.ok(taskService.edit(id, taskDto));
+        taskService.edit(id, taskDto);
+        return HttpStatus.OK;
     }
 
     @DeleteMapping("{id}")
@@ -73,19 +74,20 @@ public class TaskController {
         return HttpStatus.OK;
     }
 
-    //ToDo Изменить статус (АДМИН И ИСПОЛНИТЕЛЬ)
     @GetMapping("{id}/change-status")
     @Operation(summary = "Изменение статуса задачи", description = "Доступно только администратору и исполнителю")
-    public ResponseEntity<Task> changeStatus(@PathVariable Long id,
+    public HttpStatus changeStatus(@PathVariable Long id,
                                        Authentication auth) throws IOException {
-            return ResponseEntity.ok(taskService.changeStatus(id, auth));
+            taskService.changeStatus(id, auth);
+            return HttpStatus.OK;
     }
 
     @GetMapping("{id}/set-performer")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @Operation(summary = "Назначение исполнителя задачи", description = "Доступно только администратору")
-    public ResponseEntity<Task> setPerformer(@PathVariable Long id,
+    public HttpStatus setPerformer(@PathVariable Long id,
                                    @RequestParam int userId) {
-        return ResponseEntity.ok(taskService.setPerformer(id, userId));
+        taskService.setPerformer(id, userId);
+        return HttpStatus.OK;
     }
 }

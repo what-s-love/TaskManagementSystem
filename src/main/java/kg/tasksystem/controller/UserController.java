@@ -20,10 +20,10 @@ public class UserController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Получение всех пользователей", description = "Доступно только администратору")
-    public @ResponseBody List<User> getUsers(
+    public @ResponseBody ResponseEntity<List<User>> getUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "2") int size) {
-        return userService.getUsersOfPage(page, size);
+         return ResponseEntity.ok(userService.getUsersOfPage(page, size));
     }
 
     @GetMapping("{id}")
