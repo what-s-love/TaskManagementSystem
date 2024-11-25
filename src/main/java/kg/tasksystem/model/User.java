@@ -48,13 +48,6 @@ public class User implements UserDetails {
     @Column(name = "ROLE", nullable = false, length = 50)
     private String role;
 
-    //ToDo
-/*
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    private Role role;
-*/
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(getRole()));
