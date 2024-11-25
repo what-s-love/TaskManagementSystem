@@ -1,9 +1,12 @@
 package kg.tasksystem.service;
 
+import kg.tasksystem.exception.UserNotFoundException;
 import kg.tasksystem.model.User;
 import kg.tasksystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,15 +19,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
-    public List<User> getAll() {
-        return userRepository.findAll();
+
+    public List<User> getUsersOfPage(int pageNumber, int pageSize) {
+        List<User> allUsers = userRepository.findAll();
+        Page<User> userPage = new Paginator<User>().toPage(allUsers, PageRequest.of(pageNumber, pageSize));
+        return userPage.getContent();
     }
 
     public User getByEmail(String email) {
         return userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> {
                     log.warn("User with email {} not found", email);
-                    return new UsernameNotFoundException(String.format("User %s is not found", email));
+                    return new UserNotFoundException(String.format("User %s is not found", email));
+                });
+    }
+
+    public User getById(int id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("User with id {} not found", id);
+                    return new UsernameNotFoundException(String.format("User with ID %d is not found", id));
                 });
     }
 

@@ -24,6 +24,7 @@ public class Task {
     @NotNull
     @Column(name = "TITLE", nullable = false, length = 50)
     private String title;
+    @NotNull
     @Column(name = "DESCRIPTION", columnDefinition = "TEXT", nullable = false)
     private String description;
     @NotNull
