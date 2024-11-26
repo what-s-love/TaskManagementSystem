@@ -2,7 +2,6 @@ package kg.tasksystem.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import kg.tasksystem.dto.JwtAuthenticationResponse;
 import kg.tasksystem.dto.SignInRequest;
 import kg.tasksystem.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;

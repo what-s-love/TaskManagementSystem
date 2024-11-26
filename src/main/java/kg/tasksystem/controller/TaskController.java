@@ -77,8 +77,9 @@ public class TaskController {
 
     @DeleteMapping("{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    @Operation(summary = "Удаление задачи", description = "Доступно только администратору")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    @Operation(summary = "Удаление задачи", description = "Доступно только администратору; Нельзя удалить свою учётку")
+    public ResponseEntity<?> delete(@PathVariable Long id,
+                                    Authentication auth) {
         taskService.delete(id);
         return ResponseEntity.ok().build();
     }
