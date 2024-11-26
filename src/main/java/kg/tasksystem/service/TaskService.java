@@ -10,7 +10,6 @@ import kg.tasksystem.model.User;
 import kg.tasksystem.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.BadRequestException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -70,7 +69,7 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
-    public void changeStatus(Long taskId, Authentication auth) throws IOException {
+    public void changeStatus(Long taskId, Authentication auth) throws IOException, RuntimeException {
         User user = userService.getByEmail(auth.getName());
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new EntityNotFoundException("Task not found"));
         if (user.getRole().equals(Role.ROLE_ADMIN.toString()) || Objects.equals(user.getId(), task.getPerformer().getId())) {

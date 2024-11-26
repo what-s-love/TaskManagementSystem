@@ -4,8 +4,11 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.io.DecodingException;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.WeakKeyException;
 import kg.tasksystem.model.User;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +26,7 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private long expirationTime;
 
+    @Setter
     @Value("${jwt.secret}")
     private String secretKey;
 
@@ -53,7 +57,7 @@ public class JwtService {
         return claimsResolvers.apply(claims);
     }
 
-    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         log.info("Генерация токена");
         return Jwts.builder().claims(extraClaims).subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
@@ -75,8 +79,16 @@ public class JwtService {
     }
 
     private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+        try {
+            byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+            return Keys.hmacShaKeyFor(keyBytes);
+        } catch (DecodingException e) {
+            log.error("Предоставленный secretKey не закодирован в BASE64");
+            throw new RuntimeException(e);
+        } catch (WeakKeyException e) {
+            log.error("Предоставленный secretKey имеет недостаточную длину");
+            throw new RuntimeException(e);
+        }
     }
 }
 

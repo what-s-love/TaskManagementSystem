@@ -25,7 +25,7 @@ public class CommentService {
     public Comment create(CommentDto dto, Authentication auth) {
         User author = userService.getByEmail(auth.getName());
         Task task = taskService.getTask(dto.getTaskId(), auth);
-        if (author.getRole().equals(Role.ROLE_ADMIN.toString()) || Objects.equals(author.getId(), task.getPerformer().getId())) {
+        if (author.getRole().equals(Role.ROLE_ADMIN.toString()) || (task.getPerformer() != null && Objects.equals(author.getId(), task.getPerformer().getId()))) {
             Comment newComment = Comment.builder()
                     .content(dto.getContent())
                     .task(task)

@@ -19,7 +19,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Получение всех пользователей", description = "Доступно только администратору")
+    @Operation(summary = "Получение всех пользователей", description = "Доступно только администратору; Фильтрация, пагинация")
     public @ResponseBody ResponseEntity<List<User>> getUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "2") int size) {
