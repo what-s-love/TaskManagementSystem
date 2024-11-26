@@ -1,7 +1,6 @@
 package kg.tasksystem.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import kg.tasksystem.dto.TaskDto;
 import kg.tasksystem.model.Task;
@@ -14,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -51,41 +51,52 @@ public class TaskController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @Operation(summary = "Создание новой задачи", description = "Доступно только администратору")
-    public ResponseEntity<Task> create(@RequestBody @Valid TaskDto taskDto,
-                             Authentication auth) {
-        return ResponseEntity.ok(taskService.create(taskDto, auth));
+    public ResponseEntity<?> create(@RequestBody @Valid TaskDto taskDto,
+                                    BindingResult result,
+                                    Authentication auth) {
+        if (!result.hasErrors()) {
+            return ResponseEntity.ok(taskService.create(taskDto, auth));
+        } else {
+            return ResponseEntity.badRequest().body(result.getAllErrors());
+        }
     }
 
-    //ToDo Редактирование задачи + валидация + возврат ошибок (АДМИН)
     @PostMapping("{id}/edit")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @Operation(summary = "Редактирование задачи", description = "Доступно только администратору")
-    public ResponseEntity<Task> edit(@PathVariable Long id,
-                           @RequestBody @Valid TaskDto taskDto) {
-        return ResponseEntity.ok(taskService.edit(id, taskDto));
+    public ResponseEntity<?> edit(@PathVariable Long id,
+                                  @RequestBody @Valid TaskDto taskDto,
+                                  BindingResult result) {
+        if (!result.hasErrors()) {
+            taskService.edit(id, taskDto);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } else {
+            return ResponseEntity.badRequest().body(result.getAllErrors());
+        }
     }
 
     @DeleteMapping("{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @Operation(summary = "Удаление задачи", description = "Доступно только администратору")
-    public HttpStatus delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         taskService.delete(id);
-        return HttpStatus.OK;
+        return ResponseEntity.ok().build();
     }
 
-    //ToDo Изменить статус (АДМИН И ИСПОЛНИТЕЛЬ)
     @GetMapping("{id}/change-status")
     @Operation(summary = "Изменение статуса задачи", description = "Доступно только администратору и исполнителю")
     public ResponseEntity<Task> changeStatus(@PathVariable Long id,
-                                       Authentication auth) throws IOException {
-            return ResponseEntity.ok(taskService.changeStatus(id, auth));
+                                             Authentication auth) throws IOException {
+        taskService.changeStatus(id, auth);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("{id}/set-performer")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @Operation(summary = "Назначение исполнителя задачи", description = "Доступно только администратору")
     public ResponseEntity<Task> setPerformer(@PathVariable Long id,
-                                   @RequestParam int userId) {
-        return ResponseEntity.ok(taskService.setPerformer(id, userId));
+                                             @RequestParam int userId) {
+        taskService.setPerformer(id, userId);
+        return ResponseEntity.ok().build();
     }
 }

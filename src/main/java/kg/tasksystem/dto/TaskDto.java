@@ -1,6 +1,7 @@
 package kg.tasksystem.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -12,16 +13,13 @@ import lombok.Data;
 @Schema(description = "Создание новой задачи")
 public class TaskDto {
     @Size(max = 50, message = "Максимальная длина названия 50 символов")
-    @NotNull
-    @NotEmpty
+    @NotBlank(message = "Поле title обязательно для заполнения")
     @Schema(description = "Название задачи", example = "Новая задача")
     private String title;
-    @NotNull
-    @NotEmpty
+    @NotBlank(message = "Поле description обязательно для заполнения")
     @Schema(description = "Описание задачи", example = "Создать новую задачу")
     private String description;
-    @NotNull
-    @NotEmpty
+    @NotBlank(message = "Поле priority обязательно для заполнения")
     @Schema(description = "Приоритет задачи", example = "HIGH")
     private String priority;
 }

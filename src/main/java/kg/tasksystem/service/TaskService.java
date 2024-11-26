@@ -10,7 +10,6 @@ import kg.tasksystem.model.User;
 import kg.tasksystem.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.BadRequestException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -58,11 +57,11 @@ public class TaskService {
         return taskRepository.save(newTask);
     }
 
-    public Task edit(Long taskId, TaskDto taskDto) throws EntityNotFoundException {
+    public void edit(Long taskId, TaskDto taskDto) throws EntityNotFoundException {
         Priority priority = Priority.getPriorityEnum(taskDto.getPriority());
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new EntityNotFoundException("Task not found"));
         LocalDateTime updateTime = LocalDateTime.now();
-        return taskRepository.updateTaskInfo(taskDto.getTitle(), taskDto.getDescription(), priority.toString(), updateTime, task.getId());
+        taskRepository.updateTaskInfo(taskDto.getTitle(), taskDto.getDescription(), priority.toString(), updateTime, task.getId());
     }
 
     public void delete(Long taskId) throws EntityNotFoundException {
@@ -70,7 +69,7 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
-    public Task changeStatus(Long taskId, Authentication auth) throws IOException {
+    public void changeStatus(Long taskId, Authentication auth) throws IOException, RuntimeException {
         User user = userService.getByEmail(auth.getName());
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new EntityNotFoundException("Task not found"));
         if (user.getRole().equals(Role.ROLE_ADMIN.toString()) || Objects.equals(user.getId(), task.getPerformer().getId())) {
@@ -79,16 +78,16 @@ public class TaskService {
                 case "IN_PROGRESS" -> task.setStatus(Status.DONE.getStatus());
                 default -> throw new IOException("Task is already DONE");
             }
-            return taskRepository.updateStatusById(task.getStatus(), task.getId());
+            taskRepository.updateStatusById(task.getStatus(), task.getId());
         } else {
             throw new AccessDeniedException("You are not performer of this task");
         }
     }
 
-    public Task setPerformer(Long taskId, int userId) throws EntityNotFoundException {
+    public void setPerformer(Long taskId, int userId) throws EntityNotFoundException {
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new EntityNotFoundException("Task not found"));
         User performer = userService.getById(userId);
         Status status = Status.IN_PROGRESS;
-        return taskRepository.updatePerformerAndStatusById(performer, status.toString(), task.getId());
+        taskRepository.updatePerformerAndStatusById(performer, status.toString(), task.getId());
     }
 }

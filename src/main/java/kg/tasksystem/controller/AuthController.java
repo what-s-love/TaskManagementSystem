@@ -8,6 +8,8 @@ import kg.tasksystem.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -19,7 +21,11 @@ public class AuthController {
 
     @Operation(summary = "Авторизация")
     @PostMapping(path = "/sign-in", produces = MediaType.APPLICATION_JSON_VALUE)
-    public JwtAuthenticationResponse signIn(@RequestBody @Valid SignInRequest request) {
-        return authenticationService.signIn(request);
+    public ResponseEntity<?> signIn(@RequestBody @Valid SignInRequest request, BindingResult result) {
+        if (!result.hasErrors()) {
+            return ResponseEntity.ok(authenticationService.signIn(request));
+        } else {
+            return ResponseEntity.badRequest().body(result.getAllErrors());
+        }
     }
 }
