@@ -16,7 +16,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Transactional
     @Modifying
     @Query("update Task t set t.performer = ?1, t.status = ?2 where t.id = ?3")
-<<<<<<< Updated upstream
     void updatePerformerAndStatusById(User performer, String status, Long id);
     @Transactional
     @Modifying
@@ -26,21 +25,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Modifying
     @Query("update Task t set t.title = ?1, t.description = ?2, t.priority = ?3, t.updatedAt = ?4 where t.id = ?5")
     void updateTaskInfo(String title, String description, String priority, LocalDateTime updateAt, Long id);
-=======
-    int updatePerformerAndStatusById(User performer, String status, Long id);
-    @Transactional
-    @Modifying
-    @Query("update Task t set t.author = ?1 where t.id = ?2")
-    int updateAuthorById(User author, Long id);
-    @Transactional
-    @Modifying
-    @Query("update Task t set t.status = ?1 where t.id = ?2")
-    int updateStatusById(String status, Long id);
-    @Transactional
-    @Modifying
-    @Query("update Task t set t.title = ?1, t.description = ?2, t.priority = ?3, t.updatedAt = ?4 where t.id = ?5")
-    int updateTaskInfo(String title, String description, String priority, LocalDateTime updateAt, Long id);
->>>>>>> Stashed changes
     @Override
     Optional<Task> findById(Long aLong);
 }

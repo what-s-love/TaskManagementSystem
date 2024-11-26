@@ -1,10 +1,6 @@
 package kg.tasksystem.service;
 
-<<<<<<< Updated upstream
 import kg.tasksystem.exception.EntityNotFoundException;
-=======
-import kg.tasksystem.exception.UserNotFoundException;
->>>>>>> Stashed changes
 import kg.tasksystem.model.User;
 import kg.tasksystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +30,6 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> {
                     log.warn("User with email {} not found", email);
-<<<<<<< Updated upstream
                     return new EntityNotFoundException(String.format("User %s is not found", email));
                 });
     }
@@ -44,17 +39,6 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> {
                     log.warn("User with id {} not found", id);
                     return new EntityNotFoundException(String.format("User with ID %d is not found", id));
-=======
-                    return new UserNotFoundException(String.format("User %s is not found", email));
-                });
-    }
-
-    public User getById(int id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.warn("User with id {} not found", id);
-                    return new UsernameNotFoundException(String.format("User with ID %d is not found", id));
->>>>>>> Stashed changes
                 });
     }
 

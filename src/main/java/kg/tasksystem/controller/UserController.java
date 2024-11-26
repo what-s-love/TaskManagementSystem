@@ -5,11 +5,8 @@ import kg.tasksystem.model.User;
 import kg.tasksystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-<<<<<<< Updated upstream
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-=======
->>>>>>> Stashed changes
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +19,6 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-<<<<<<< Updated upstream
     @Operation(summary = "Получение всех пользователей", description = "Доступно только администратору; Фильтрация, пагинация")
     public @ResponseBody ResponseEntity<List<User>> getUsers(
             @RequestParam(defaultValue = "0") int page,
@@ -34,11 +30,5 @@ public class UserController {
     @Operation(summary = "Получение данных пользователя по ID", description = "Доступно только администратору")
     public @ResponseBody ResponseEntity<User> getUser(@PathVariable int id) {
         return ResponseEntity.ok(userService.getById(id));
-=======
-    public @ResponseBody List<User> getUsers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return userService.getUsersOfPage(page, size);
->>>>>>> Stashed changes
     }
 }
