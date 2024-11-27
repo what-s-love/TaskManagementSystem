@@ -58,7 +58,7 @@ public class TaskController {
     }
 
     @GetMapping(value = "my", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Получение задачи по ID", description = "Доступно только администратору и исполнителю задачи")
+    @Operation(summary = "Получение списка задач, назначенных текущему пользователю на выполнение", description = "Доступно только исполнителю задачи")
     public @ResponseBody ResponseEntity<String> getMyTasks(Authentication auth) throws JsonProcessingException {
         List<Task> tasks = taskService.getMyTasks(auth).stream()
                 .sorted(Comparator.comparing(Task::getUpdatedAt).reversed()).toList();
