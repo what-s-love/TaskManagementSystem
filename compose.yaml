@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - ${APP_PORTS}
     volumes:
       - /data
       - /var/log/app
@@ -15,10 +15,10 @@ services:
     depends_on:
       - db
   db:
-    image: postgres:16
+    image: ${DB_IMAGE}
     container_name: tms_db_compose
     ports:
-      - "5050:5432"
+      - ${DB_PORTS}
     environment:
       POSTGRES_DB: tms_db
       POSTGRES_USER: ${DB_USERNAME}

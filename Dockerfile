@@ -7,10 +7,11 @@ COPY mvnw pom.xml ./
 COPY .env /opt/app/.env
 RUN ./mvnw dependency:go-offline
 COPY ./src ./src
+RUN ./mvnw test
 RUN ./mvnw clean install
 
 FROM amazoncorretto:21
 WORKDIR /opt/app
 COPY --from=builder /opt/app/target/*.jar /opt/app/*.jar
-EXPOSE 8080
+EXPOSE ${SERVER_PORT}
 ENTRYPOINT ["java", "-jar", "/opt/app/*.jar"]
