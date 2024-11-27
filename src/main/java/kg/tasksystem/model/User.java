@@ -1,5 +1,6 @@
 package kg.tasksystem.model;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -16,6 +17,7 @@ import java.util.List;
 @Setter
 @Builder
 @Entity
+@JsonFilter("UserFilter")
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "USERS")
@@ -50,12 +52,12 @@ public class User implements UserDetails {
     private String role;
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(getRole()));
     }
 
     @Override
-    @JsonIgnore
     public String getUsername() {
         return email;
     }

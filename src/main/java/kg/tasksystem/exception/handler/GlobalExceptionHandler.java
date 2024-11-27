@@ -1,5 +1,6 @@
 package kg.tasksystem.exception.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import kg.tasksystem.exception.ErrorDetails;
 import kg.tasksystem.exception.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -40,7 +41,6 @@ public class GlobalExceptionHandler {
                                                               WebRequest webRequest) {
         return new ResponseEntity<>(buildError(exception, webRequest), HttpStatus.BAD_REQUEST);
     }
-
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> exceptionHandler(Exception exception,

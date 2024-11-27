@@ -15,7 +15,7 @@ services:
     depends_on:
       - db
   db:
-    image: postgres
+    image: postgres:16
     container_name: tms_db_compose
     ports:
       - "5050:5432"

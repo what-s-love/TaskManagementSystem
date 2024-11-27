@@ -79,6 +79,7 @@ public class TaskService {
                 default -> throw new IOException("Task is already DONE");
             }
             taskRepository.updateStatusById(task.getStatus(), task.getId());
+            taskRepository.updateUpdatedAtById(LocalDateTime.now(), taskId);
         } else {
             throw new AccessDeniedException("You are not performer of this task");
         }
@@ -89,5 +90,11 @@ public class TaskService {
         User performer = userService.getById(userId);
         Status status = Status.IN_PROGRESS;
         taskRepository.updatePerformerAndStatusById(performer, status.toString(), task.getId());
+        taskRepository.updateUpdatedAtById(LocalDateTime.now(), taskId);
+    }
+
+    public List<Task> getMyTasks(Authentication auth) {
+        User user = userService.getByEmail(auth.getName());
+        return taskRepository.findByPerformer_Id(user.getId());
     }
 }

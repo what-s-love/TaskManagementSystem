@@ -9,10 +9,16 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
+    @Transactional
+    @Modifying
+    @Query("update Task t set t.updatedAt = ?1 where t.id = ?2")
+    int updateUpdatedAtById(LocalDateTime updatedAt, Long id);
+    List<Task> findByPerformer_Id(Integer id);
     @Transactional
     @Modifying
     @Query("update Task t set t.performer = ?1, t.status = ?2 where t.id = ?3")
